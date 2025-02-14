@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from collections import defaultdict
 import requests
 import os
 
@@ -91,9 +92,7 @@ def get_accounts_and_insights(platform_value):
         account_token = account["token"]
 
         # Obtém os anúncios da conta
-        insights = get_insights_for_account(account_id, account_token, platform_value)
-
-        #print(f"Dados recebidos para a conta {account_name}: {insights}")
+        insights = get_insights_for_account(account_id, account_token, platform_value)        
 
         # Se não houver anúncios, adiciona uma linha indicando isso
         if not insights:
@@ -124,6 +123,34 @@ def get_accounts_and_insights(platform_value):
 
     return all_data
 
+def get_summary_by_account(platform_value):
+    """Gera um resumo somando apenas os cliques por conta."""
+    insights = get_accounts_and_insights(platform_value)
+    summary = {}
+
+    for insight in insights:
+        account_name = insight["account_name"]
+
+        if account_name not in summary:
+            summary[account_name] = {
+                "account_name": account_name,
+                "impressions": 0,
+                "cost": 0.0,
+                "clicks": 0  
+            }
+
+        summary[account_name]["impressions"] += int(str(insight["impressions"])) if str(insight["impressions"]).isdigit() else 0        
+        summary[account_name]["clicks"] += int(str(insight["clicks"])) if str(insight["clicks"]).isdigit() else 0
+
+        if insight["cost"] != "-":
+            summary[account_name]["cost"] += float(insight["cost"])
+
+    resultado = list(summary.values())    
+
+    return resultado
+
+
+
 @app.route('/')
 def root():
     """Página inicial com informações pessoais e menu"""
@@ -144,7 +171,13 @@ def plataformas():
 def show_platform(platform):
     insights = get_accounts_and_insights(platform)
     platform_name = get_platform_name(platform)
-    return render_template("platform.html", platform_name=platform_name, insights=insights)
+    return render_template("platform.html", platform_name=platform_name, platform_value=platform, insights=insights)
+
+@app.route("/<platform>/resumo")
+def show_summary(platform):
+    summary = get_summary_by_account(platform)
+    platform_name = get_platform_name(platform)
+    return render_template("resumo.html", platform_name=platform_name, platform_value=platform, summary=summary)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Mudança para 5000 se porta 80 exigir permissão de root
