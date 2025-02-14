@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informações de Rodrigo</title>
+    <title>Plataformas Disponíveis</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,6 +24,20 @@
             background: #0056b3;
             border-radius: 5px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -33,10 +47,20 @@
         <a href="/plataformas">Plataformas</a>
     </nav>
 
-    <h1>Informações Pessoais</h1>
-    <p><strong>Nome:</strong> {{ user_data.name }}</p>
-    <p><strong>Email:</strong> {{ user_data.email }}</p>
-    <p><strong>LinkedIn:</strong> <a href="{{ user_data.linkedin }}" target="_blank">{{ user_data.linkedin }}</a></p>
+    <h1>Plataformas Disponíveis</h1>
+
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Valor</th>
+        </tr>
+        {% for platform in platforms %}
+        <tr>
+            <td><a href="/{{ platform.value}}">{{ platform.text }}</a></td>
+            <td>{{ platform.value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
 </body>
 </html>
