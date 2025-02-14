@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataformas Disponíveis</title>
+    <title>Contas da Plataforma {{ platform_name }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,17 +47,29 @@
         <a href="/plataformas">Plataformas</a>
     </nav>
 
-    <h1>Plataformas Disponíveis</h1>
+    <h1>Contas da Plataforma {{ platform_name }}</h1>
 
     <table>
         <tr>
-            <th>Nome</th>
-            <th>Valor</th>
+            <th>Plataforma</th>
+            <th>Conta</th>
+            <th>Nome do Anuncio</th>
+            <th>Impressões</th>
+            <th>Custo</th>
+            <th>Regiao</th>
+            <th>Clicks</th>
+            <th>Status</th>
         </tr>
-        {% for platform in platforms %}
+        {% for insight in insights %}
         <tr>
-            <td><a href="/{{ platform.value }}">{{ platform.text }}</a></td>
-            <td>{{ platform.value }}</td>
+            <td>{{ platform_name }}</td>
+            <td>{{ insight.account_name }}</td>
+            <td>{{ insight.ad_name }}</td>
+            <td>{{ insight.impressions }}</td>
+            <td>{{ insight.cost }}</td>
+            <td>{{ insight.region }}</td>
+            <td>{{ insight.clicks }}</td>
+            <td>{{ insight.status }}</td>
         </tr>
         {% endfor %}
     </table>
