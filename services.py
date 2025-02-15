@@ -119,3 +119,38 @@ def get_summary_by_account(platform_value):
             summary[account_name]["cost"] += float(insight["cost"])
 
     return list(summary.values())
+
+def get_all_ads_report():
+    """Obtém todos os anúncios de todas as plataformas e gera o relatório."""
+    all_data = []
+    platforms = get_platforms()  # Pega todas as plataformas
+
+    for platform in platforms:
+        platform_value = platform["value"]
+        platform_name = platform["text"]
+
+        # Obtemos os anúncios dessa plataforma
+        ads = get_accounts_and_insights(platform_value)
+
+        # Adiciona as informações de plataforma e conta a cada anúncio
+        for ad in ads:
+            account_name = ad["account_name"]
+            ad_data = {
+                "platform_name": platform_name,
+                "account_name": account_name,
+                "ad_name": ad.get("ad_name", "-"),
+                "impressions": ad.get("impressions", "-"),
+                "cost": ad.get("cost", "-"),
+                "region": ad.get("region", "-"),
+                "clicks": ad.get("clicks", "-"),
+                "status": ad.get("status", "-"),
+                "cost_per_click": "-"
+            }
+            # Calculando o CPC (Cost per Click) se possível
+            if ad.get("cost") not in ["-", None] and ad.get("clicks") not in ["-", None, "0"]:
+                ad_data["cost_per_click"] = round(float(ad["cost"]) / float(ad["clicks"]), 2)
+
+            all_data.append(ad_data)
+
+    return all_data
+

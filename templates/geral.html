@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataformas Disponíveis</title>
+    <title>Relatório Geral</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,22 +45,27 @@
     <nav>
         <a href="/">Início</a>
         <a href="/plataformas">Plataformas</a>
-        <a href="/geral">Geral</a>
     </nav>
 
-    <h1>Plataformas Disponíveis</h1>
+    <h1>Relatório Geral de Anúncios</h1>
 
     <table>
-        <tr>
-            <th>Nome</th>
-            <th>Valor</th>
-        </tr>
-        {% for platform in platforms %}
-        <tr>
-            <td><a href="/{{ platform.value }}">{{ platform.text }}</a></td>
-            <td>{{ platform.value }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                {% for field in report_fields %}
+                    <th>{{ field.replace('_', ' ').capitalize() }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in report_data %}
+                <tr>
+                    {% for field in report_fields %}
+                        <td>{% if field == 'cost' or field == 'cost_per_click' %}R$ {{ row.get(field, '-') }}{% else %}{{ row.get(field, '-') }}{% endif %}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
 </body>
