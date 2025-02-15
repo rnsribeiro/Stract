@@ -291,8 +291,3 @@ def get_general_summary():
  
     # Transformando o resumo em uma lista para fácil manipulação no template
     return list(summary.values())
-
-
-
-
-
