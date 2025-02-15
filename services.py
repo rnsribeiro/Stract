@@ -181,34 +181,85 @@ def get_summary_by_account(platform_value):
 def get_all_ads_report():
     """Obtém todos os anúncios de todas as plataformas e gera o relatório."""
     all_data = []
-    platforms = get_platforms()  # Pega todas as plataformas
+    platforms = get_platforms()
+    all_fields = set(["account_name", "cost_per_click"])
+
+    # Mapeamento de campos similares para um único nome padrão
+    field_mapping = {
+        "adname": "ad_name",
+        "ad name": "ad_name",
+        "cpc": "cost_per_click",
+        "spend": "cost",  # Unificando "spend" e "cost"
+        "effective_status": "status",  # Unificando "effective_status" e "status"
+        "country": "region"  # Mesclando "country" e "region"
+    }
 
     for platform in platforms:
         platform_value = platform["value"]
         platform_name = platform["text"]
 
-        # Obtemos os anúncios dessa plataforma
         ads = get_accounts_and_insights(platform_value)
 
-        # Adiciona as informações de plataforma e conta a cada anúncio
         for ad in ads:
-            account_name = ad["account_name"]
+            account_name = ad.get("account_name", "-")
             ad_data = {
                 "platform_name": platform_name,
-                "account_name": account_name,
-                "ad_name": ad.get("ad_name", "-"),
-                "impressions": ad.get("impressions", "-"),
-                "cost": ad.get("cost", "-"),
-                "region": ad.get("region", "-"),
-                "clicks": ad.get("clicks", "-"),
-                "status": ad.get("status", "-"),
-                "cost_per_click": "-"
+                "account_name": account_name
             }
-            # Calculando o CPC (Cost per Click) se possível
-            if ad.get("cost") not in ["-", None] and ad.get("clicks") not in ["-", None, "0"]:
-                ad_data["cost_per_click"] = round(float(ad["cost"]) / float(ad["clicks"]), 2)
+
+            has_cost_per_click = False  # Flag para verificar se a API já fornece CPC
+
+            for key, value in ad.items():
+                if key == "id":  # Ignora a coluna "id"
+                    continue
+                
+                normalized_key = field_mapping.get(key.lower(), key)  # Normaliza o nome do campo
+                ad_data[normalized_key] = value if value not in ["-", None] else "-"
+
+                if normalized_key == "cost_per_click" and value not in ["-", None]:
+                    has_cost_per_click = True  # A API já fornece CPC, não calculamos manualmente
+
+                all_fields.add(normalized_key)  # Adiciona o campo na lista global
+
+            # Mescla os campos "spend" e "cost", priorizando "spend"
+            if "spend" in ad and ad["spend"] not in ["-", None]:
+                ad_data["cost"] = ad["spend"]
+            elif "cost" in ad and ad["cost"] not in ["-", None]:
+                ad_data["cost"] = ad["cost"]
+            else:
+                ad_data["cost"] = "-"
+
+            # Mescla os campos "effective_status" e "status", priorizando "effective_status"
+            if "effective_status" in ad and ad["effective_status"] not in ["-", None]:
+                ad_data["status"] = ad["effective_status"]
+            elif "status" in ad and ad["status"] not in ["-", None]:
+                ad_data["status"] = ad["status"]
+            else:
+                ad_data["status"] = "-"
+
+            # Mescla "country" e "region", priorizando "country"
+            if "country" in ad and ad["country"] not in ["-", None]:
+                ad_data["region"] = ad["country"]
+            elif "region" in ad and ad["region"] not in ["-", None]:
+                ad_data["region"] = ad["region"]
+            else:
+                ad_data["region"] = "-"
+
+            # Cálculo do CPC (Cost per Click) apenas se não existir "cost_per_click" ou "cpc"
+            if not has_cost_per_click:
+                if ad_data["cost"] not in ["-", None] and ad.get("clicks") not in ["-", None, "0"]:
+                    try:
+                        ad_data["cost_per_click"] = round(float(ad_data["cost"]) / float(ad["clicks"]), 2)
+                    except ValueError:
+                        ad_data["cost_per_click"] = "-"
 
             all_data.append(ad_data)
 
-    return all_data
+    # Define a ordem das colunas, garantindo que "platform_name" e "account_name" venham primeiro
+    ordered_fields = ["platform_name", "account_name"] + sorted(field for field in all_fields if field not in ["platform_name", "account_name"])
+
+    return all_data, ordered_fields
+
+
+
 

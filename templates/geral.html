@@ -61,12 +61,14 @@
             {% for row in report_data %}
                 <tr>
                     {% for field in report_fields %}
-                        <td>{% if field == 'cost' or field == 'cost_per_click' %}R$ {{ row.get(field, '-') }}{% else %}{{ row.get(field, '-') }}{% endif %}</td>
+                        <td>{% if field in ['cost', 'spend', 'cost_per_click'] %}R$ {{ row.get(field, '-') }}{% else %}{{ row.get(field, '-') }}{% endif %}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    
+    
 
 </body>
 </html>
