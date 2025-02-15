@@ -51,28 +51,36 @@
     <h1>Contas da Plataforma {{ platform_name }}</h1>
 
     <table>
-        <tr>
-            <th>Plataforma</th>
-            <th>Conta</th>
-            <th>Ad Name</th>
-            <th>Impressões</th>
-            <th>Custo</th>
-            <th>Regiao</th>
-            <th>Clicks</th>
-            <th>Status</th>
-        </tr>
-        {% for insight in insights %}
-        <tr>
-            <td>{{ platform_name }}</td>
-            <td>{{ insight.account_name }}</td>
-            <td>{{ insight.ad_name }}</td>
-            <td>{{ insight.impressions }}</td>
-            <td>R$ {{ insight.cost }}</td>
-            <td>{{ insight.region }}</td>
-            <td>{{ insight.clicks }}</td>
-            <td>{{ insight.status }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                {% if insights %}
+                    {% for key in insights[0].keys() %}
+                        {% if key != 'id' %}
+                            <th>{{ key | capitalize }}</th>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <th>Nenhum dado encontrado</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if insights %}
+                {% for insight in insights %}
+                    <tr>
+                        {% for key in insight.keys() %}
+                            {% if key != 'id' %}
+                                <td>{{ insight[key] }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">Nenhum dado disponível para exibição.</td>
+                </tr>
+            {% endif %}
+        </tbody>
     </table>
 
 </body>

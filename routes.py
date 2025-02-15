@@ -30,15 +30,16 @@ def register_routes(app):
     def show_platform(platform):
         """Exibe insights da plataforma"""
         insights = get_accounts_and_insights(platform)
+        #print(insights)
         platform_name = get_platform_name(platform)
         return render_template("platform.html", platform_name=platform_name, platform_value=platform, insights=insights)
 
     @app.route("/<platform>/resumo")
     def show_summary(platform):
         """Mostra o resumo da plataforma"""
-        summary = get_summary_by_account(platform)
+        summarys = get_summary_by_account(platform)            
         platform_name = get_platform_name(platform)
-        return render_template("resumo.html", platform_name=platform_name, platform_value=platform, summary=summary)
+        return render_template("resumo.html", platform_name=platform_name, platform_value=platform, summarys=summarys)
 
     @app.route('/geral')
     def geral_report():

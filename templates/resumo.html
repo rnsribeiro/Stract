@@ -51,20 +51,36 @@
     <h1>Resumo - {{ platform_name }}</h1>
 
     <table>
-        <tr>
-            <th>Conta</th>
-            <th>Clicks</th>
-            <th>Impressões</th>
-            <th>Custo Total</th>
-        </tr>
-        {% for item in summary %}
-        <tr>
-            <td>{{ item.account_name }}</td>
-            <td>{{ item.clicks }}</td>
-            <td>{{ item.impressions }}</td>
-            <td>R$ {{ item.cost }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                {% if summarys %}
+                    {% for key in summarys[0].keys() %}
+                        {% if key != 'id' and key != 'cpc' and key != 'cost_per_click' %}
+                            <th>{{ key | capitalize }}</th>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <th>Nenhum dado encontrado</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if summarys %}
+                {% for summary in summarys %}
+                    <tr>
+                        {% for key in summary.keys() %}
+                            {% if key != 'id' and key != 'cpc' and key != 'cost_per_click' %}
+                                <td>{{ summary[key] }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">Nenhum dado disponível para exibição.</td>
+                </tr>
+            {% endif %}
+        </tbody>
     </table>
 
 </body>
