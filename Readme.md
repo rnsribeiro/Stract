@@ -64,7 +64,7 @@ python app.py
 
 - `app.py` - Arquivo principal da aplicação Flask que configura o servidor e registra as rotas
 - `routes.py` - Gerenciamento de rotas e endpoints da aplicação
-  - Rotas para visualização de dados (/, /plataformas, /geral)
+  - Rotas para visualização de dados (/plataformas, /`<platform>`, /`<platform>`/resumo, /geral, /geral/resumo)
   - Rotas para download de relatórios CSV
   - Integração entre camadas de serviço e templates
 - `services.py` - Serviços de integração com a API e processamento de dados
@@ -94,5 +94,3 @@ python app.py
     - Definição de estilos globais para navegação, tabelas e botões de download
     - Layout responsivo com espaçamento e alinhamento adequado dos elementos
     - Estilização das tabelas para exibição clara dos dados (bordas, cores de fundo e realce de cabeçalhos)
-
-
