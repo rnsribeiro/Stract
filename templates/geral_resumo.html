@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Resumo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        nav {
+            background: #007bff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            display: inline-block;
+        }
+        nav a:hover {
+            background: #0056b3;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/">Início</a>
+        <a href="/plataformas">Plataformas</a>
+        <a href="/geral">Geral</a>
+    </nav>
+
+    <h1>Relatório Resumo de Anúncios</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Plataforma</th>
+                <th>Nome da Conta</th>
+                <th>Nome do Anúncio</th>
+                <th>Cliques</th>
+                <th>Impressões</th>
+                <th>CTR</th>
+                <th>Status</th>
+                <th>Objetivo Global</th>
+                <th>Gasto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in dados %}
+            <tr>
+                <td>{{ row['platform_name'] }}</td>
+                <td>{{ row['account_name'] if row['account_name'] else '' }}</td>
+                <td>{{ row['ad_name'] if row['ad_name'] else '' }}</td>
+                <td>{{ row['clicks'] }}</td>
+                <td>{{ row['impressions'] }}</td>
+                <td>{{ row.get('ctr', '') }}</td>
+                <td>{{ row.get('status', '') }}</td>
+                <td>{{ row.get('global_objective', '') }}</td>
+                <td>
+                    {% if row.get('spend') %}
+                        R$ {{ row['spend'] }}
+                    {% elif row.get('cost') %}
+                        R$ {{ row['cost'] }}
+                    {% else %}
+                        ""
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

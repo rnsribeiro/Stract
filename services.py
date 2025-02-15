@@ -260,6 +260,39 @@ def get_all_ads_report():
 
     return all_data, ordered_fields
 
+def get_general_summary():
+    """Gera um resumo geral agregando os dados por plataforma e somando valores numéricos, omitindo o campo 'cpc'."""
+    platforms = get_platforms()
+    summary = {}
+
+    for platform in platforms:
+        platform_value = platform["value"]
+        platform_name = platform["text"]
+
+        # Obtendo os dados dos anúncios
+        ads = get_accounts_and_insights(platform_value)
+
+        for ad in ads:
+            # Agrupando os dados por plataforma
+            if platform_name not in summary:
+                summary[platform_name] = {"platform_name": platform_name}
+
+            for key, value in ad.items():
+                # Omitindo o campo 'cpc'
+                if key == "platform_name" or key == "cpc":
+                    continue  # Ignora o campo 'cpc'
+                
+                # Somando os valores numéricos
+                if isinstance(value, (int, float)) or str(value).replace(".", "", 1).isdigit():
+                    summary[platform_name][key] = summary[platform_name].get(key, 0) + float(value)
+                else:
+                    # Mantendo os campos de texto vazios
+                    summary[platform_name][key] = ""
+ 
+    # Transformando o resumo em uma lista para fácil manipulação no template
+    return list(summary.values())
+
+
 
 
 
