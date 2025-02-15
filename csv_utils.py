@@ -9,6 +9,7 @@ def generate_csv_from_insights(insights, platform_name):
     
     Args:
         insights (list): Lista de dicionários contendo os dados dos insights
+        platform_name (str): Nome da plataforma para definir o nome do arquivo
         
     Returns:
         Response: Objeto response do Flask contendo o arquivo CSV
@@ -44,6 +45,7 @@ def generate_csv_from_summary(summary, platform_name):
     
     Args:
         summary (list): Lista de dicionários contendo os dados de resumo
+        platform_name (str): Nome da plataforma para usar como parte do nome do arquivo
         
     Returns:
         Response: Objeto response do Flask contendo o arquivo CSV

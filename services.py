@@ -17,7 +17,7 @@ def get_platforms():
 def get_platform_fields(platform_value):
     """Obtém todos os campos de uma plataforma específica, lidando com paginação."""
     fields = []
-    page = 1  # Começa na primeira página
+    page = 1  
 
     try:
         while True:
@@ -44,7 +44,6 @@ def get_platform_fields(platform_value):
 
             page += 1  # Avança para a próxima página
 
-        #print(f"Campos da plataforma {platform_value}: {fields}")
         return fields
 
     except requests.exceptions.RequestException as e:
@@ -98,7 +97,6 @@ def get_insights_for_account(account_id, account_token, platform_value):
             f"{BASE_URL}insights?platform={platform_value}&account={account_id}&token={account_token}&fields={fields_str}",
             headers={"Authorization": f"Bearer {BEARER_TOKEN}"}
         )
-        #print(f"{BASE_URL}insights?platform={platform_value}&account={account_id}&token={account_token}&fields={fields_str}")
         response.raise_for_status()
         data = response.json()
         return data.get("insights", [])
@@ -191,7 +189,7 @@ def get_all_ads_report():
         "cpc": "cost_per_click",
         "spend": "cost",  # Unificando "spend" e "cost"
         "effective_status": "status",  # Unificando "effective_status" e "status"
-        "country": "region"  # Mesclando "country" e "region"
+        "country": "region"  # Unificando "country" e "region"
     }
 
     for platform in platforms:

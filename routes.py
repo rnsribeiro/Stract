@@ -54,20 +54,20 @@ def register_routes(app):
 
     @app.route('/geral/resumo')
     def geral_resumo():
-        # Supondo que você tenha a função `get_general_summary` que retorna os dados
+        """Resumo geral com todos os anúncios de todas as plataformas"""        
         dados = get_general_summary()
         return render_template('geral_resumo.html', dados=dados)
 
     # Rotas para download de CSV
     @app.route("/download/<platform>")
     def download_csv(platform):
-        """Download dos dados da plataforma em formato CSV"""
+        """Download dos dados por plataforma em formato CSV"""
         insights = get_accounts_and_insights(platform)
         return generate_csv_from_insights(insights, platform)
 
     @app.route("/download/<plaform>/resumo")
     def download_summary_csv(plaform):
-        """Download dos dados do resumo da plataforma em formato CSV"""
+        """Download dos dados do resumo por plataforma em formato CSV"""
         summary = get_summary_by_account(plaform)
         return generate_csv_from_summary(summary, plaform)
 
@@ -79,7 +79,6 @@ def register_routes(app):
 
     @app.route("/download/geral/resumo")
     def download_geral_resumo_csv():
-        # Supondo que você tenha a função `get_general_summary` que retorna os dados
-        dados = get_general_summary()
-        print(dados)
+        """"Download do Resumo dos dados geral em formato CSV"""
+        dados = get_general_summary()        
         return generate_csv_from_general_summary(dados)
